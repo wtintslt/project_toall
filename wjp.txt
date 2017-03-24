@@ -1,40 +1,6 @@
-svn://15.8.50.69  
-		wangjinpeng
-		wangjinpeng
-http://15.8.50.69/mantisbt/      BJSJ mantis地址
-		李晓同	杜晓雷
-		123456	xiaolei123
-
-BJSC的服务器		
-		15.9.108.7
-			root
-			beaconbaomi
-				
-数据库
-	15.9.106.10   
-		runvista
-		runco
-				BASICCOUNT表来查询统计数据
-				BASE_DATA_CONFIG表来查询数据存放地址，若是没有写，就是在15.9.106.10中
-	15.9.107.41
-		menhu
-		menhu
-				systemlog表来查询3.0的使用日志；可以按照分组来实现查询组织机构的使用次数
-				
-	15.8.64.149
-		runga
-		runga
-				BJSC_DQB 开头的是DQB数据表
-				
-BJSJ的服务器地址(替换文件时class文件)
-	15.9.107.41			qws服务器地址
-	15.9.107.44			中间件的服务器地址
-	15.9.107.45			BJSJ的服务器地址
-	15.9.103.110		应用支撑的服务器地址
 
 linux命令
 	1.查看应用支撑的日志
-		登录到对应的appsupport服务器上（北京市局的服务器地址是15.9.103.110）
 		/run/appsupport/tomcat/logs
 		 tomcat_8080]# sh bin/startup.sh ;tail -f logs/catalina.out
 	2.查看holo配置
@@ -75,8 +41,6 @@ linux命令
 	[root@bjxx5hdm27 ~]# find /data1/run/BcpConvertorDir/target -type f -mmin +2  -exec mv {}  /data1/run/BcpConvertorDir/target_to_dpp/ \;
 	find /data1/run/BcpConvertorDir/target -type f -mmin +2  -exec mv {}  /data1/run/BcpConvertorDir/target_to_dpp/ \;
 
-	/*  Xshell
-	ssh 15.9.103.56
 	[root@bjsj1ycl56 ~]# df -h   //来查询磁盘用了多少
 	文件清单命令	ls   -l 用于列出文件和目录的详细信息
 	文件复制命令	cp [option] [source] [destination]	-i 在覆盖目标文件之前将给出提示
