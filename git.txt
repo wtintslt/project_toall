@@ -17,21 +17,22 @@
 			③git commit -m "introduction" //将你添加到仓库中的文件提交到仓库，-m 后是注释
 
 三、版本管理
-		1.git status //查看仓库当前状态
-		2.git diff //查看修改内容，如果有修改
-		  git add	//提交修改和提交更新的步骤一样
-		  git commit -m "text"
-		3.git log	//显示提交日志
-		  git log --pretty=online 	//单行显示日志
-		4.git reset --head HEAD^ //HEAD表示当前版本，HEAD^表示上个，HEAD^^表示上上个，HEAD~100表示上100个
-		5.git reset --hard ...	//上面的命令行窗口还没有被关掉，你就可以根据commit id是...，可以指定回到某个版本
+		1.git  status //查看仓库当前状态
+		2.git  diff //查看修改内容，如果有修改
+		  git  add	//提交修改和提交更新的步骤一样
+		  git  commit -m "text"
+		3.git  log	//显示提交日志
+		  git  log --pretty=oneline 	//单行显示日志
+		4.git  reset --head HEAD^ //HEAD表示当前版本，HEAD^表示上个，HEAD^^表示上上个，HEAD~100表示上100个
+		5.git  reset --hard ...	//上面的命令行窗口还没有被关掉，你就可以根据commit id是...，可以指定回到某个版本
 								//版本号没必要写全，前几位就可以了，Git会自动去找。当然也不能只写前一两位，因为Git可能会找到多个版本号
-		6.git reflog	//记录每一次命令
+		6.git  reflog	//记录每一次命令
 
 四、远程关联
 		1.关联远程库
 		git remote add origin git@github.com:yourgitaccount/reomteRepository.git    //关联远程仓库，reomteRepository必须存在，git帐号要对
 		2.git remote  //查看远程库
+		  git remote -v //查看远程库的详细信息
 		  git remote rm remotename //删除远程库
 		  
 		3.如果报ssh error  
@@ -40,4 +41,74 @@
 			复制到远程服务器的个人主页中的设置--SSH KEYS 中，添加
 		4.推送本地内容到服务器
 			①git push -u origin master  //第一次推送，需要-u把本地的master分支和远程的master分支关联起来
-			②git push origin master //以后都可以直接推送
+			②git push origin master //推送master分支
+			③git push origin <name>  //推送指定分支
+		5.从远程库克隆（前提是远程库存在）
+			git clone git@github.com:useraccount/examplerepository.git  //从远程库库克隆
+			cd examplerepository //进入目录
+			如果有多个人协作开发，那么每个人各自从远程克隆一份就可以
+
+五、分支管理
+			/**
+			*每次提交，Git都把它们串成一条时间线，这条时间线就是一个分支
+			*Git里面默认有一个分支，即主分支 master分支
+			*vi <filename> //编辑某个文件   :wq  //按Esc退出编辑 后保存
+			**/
+		1.创建合并分支
+     	  git checkout -b demo  //创建分支demo，并切换到demo相当于 git branch demo ;git checkout demo
+		  git branch //查看分支,当前分支前会加一个*
+		  在某一分支上完成的工作，切换到另一个分支，就不会存在。
+		  git checkout master //切换到master分支
+		  git merge demo //提交demo分支的工作成果合并到master分支
+		  git branch -d demo //删除demo分支
+		2.解决冲突
+		  //当两个分支都对某个文件进行修改后提交，再合并分支会导致冲突
+		  //再用编辑器对此文件进行编辑后，Git用<<<<<<<，=======，>>>>>>>标记出不同分支的内容
+		  git log --graph --pretty=oneline --abbrev-commit //可以看到分支合并图
+		3.分支管理
+		  //通常，合并分支时，如果可能，Git会用Fast forward 模式，但这种模式下，删除分支后，会丢掉分支信息，看不出来曾经做过合并。
+		  //要强制禁用Fast forward模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息
+		  git merge --no-ff -m "merge with no-ff" demo //本次使用分支master，合并demo分支，禁用Fast forward
+		  ***管理策略***
+		  ①首先，master分支应该是非常稳定的，也就是仅用来发布新版本，平时不能在上面干活；
+		  ②干活都在dev分支上，也就是说，dev分支是不稳定的，到某个时候，比如1.0版本发布时，再把dev分支合并到master上，在master分支发布1.0版本；
+          ③你和你的小伙伴们每个人都在dev分支上干活，每个人都有自己的分支，时不时地往dev分支上合并就可以了。
+		4.bug分支
+		  git  stash //把当前工作现场保存
+		  git  stash list //查看保存的工作现场
+		  git  stash apply //恢复stash，stash内容不删除 ，要删除再用 git stash drop 
+		  git  stash pop //恢复的同时把stash内容也删除
+		  git  stash apply stash@{0} //恢复stash中编号为0的工作区
+		5.删除
+		  git branch -D <name> //丢弃一个没有被合并过的分支
+		6.多人协作
+		   //master分支是主分支，因此要时刻与远程同步；
+		   //dev分支是开发分支，团队所有成员都需要在上面工作，所以也需要与远程同步；
+		   //bug分支只用于在本地修复bug，就没必要推到远程了，除非老板要看看你每周到底修复了几个bug；
+		  feature分支是否推到远程，取决于你是否和你的小伙伴合作在上面开发。
+		  git push origin master //推送master分支
+		  git push origin <name>  //推送指定分支
+		   //从远程库clone时，默认情况下，只能看到本地的master分支
+		  git checkout -b dev origin/dev //创建远程origin的dev分支到本地dev
+		  git pull //把最新的提交从origin/dev抓下来，然后，在本地合并，解决冲突，再推送
+		  git branch --set-upstream dev origin/dev //指定本地dev分支和远程origin/dev分支的链接
+		  
+六、标签管理
+		Git的标签是版本库的快照，其实就是指向某个commit的指针（跟分支很像对不对？但是分支可以移动，标签不能移动）
+		1.创建标签
+		  git branch //显示分支
+		  git checkout master //切换到master分支
+		  git tag v1.0 //为master打了一个 v1.0的标签
+		  git tag  //查看所有标签，按照字母顺序排序
+		  git tag v0.9 <commit id> //给任意id打标签，默认是最新提交的
+		  git show <tagname> //显示标签信息
+		  git tag -a <tagname> -m "introduction" //-a指定标签名，-m指定说明文字
+		2.操作标签
+		  git tag -d <tagname> //删除指定名字的标签
+		  git push origin <tagname> //推送某个标签到远程
+		  git push origin --tags //一次性推送全部尚未推送到远程的本地标签
+		  ②如果标签已经推送到远程，要删除远程标签
+		    git tag -d v0.9 //删除本地v0.9
+			git push origin :refs/tags/v0.9 //删除一个远程标签
+			
+		  
